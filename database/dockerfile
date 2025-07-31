@@ -1,0 +1,18 @@
+FROM postgres:10
+# Imagem base
+
+# Define o diretório de trabalho
+WORKDIR /
+
+# Copia os arquivos do projeto
+COPY . .
+
+# Setando Permissões
+RUN chmod +x ./scripts/init_db.sql
+
+# Formatação utilizando comando sed para padronização unicode(linux/windows)
+RUN sed -i 's/\r//' ./scripts/init_db.sql
+
+# Expondo a porta
+EXPOSE 5432
+

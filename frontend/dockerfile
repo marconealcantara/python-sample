@@ -1,0 +1,17 @@
+FROM node:24
+# Imagem base com Node.js
+
+# Define o diretório de trabalho
+WORKDIR /
+
+# Copia o conteúdo da pasta frontend para dentro do contêiner
+COPY . .
+
+# Instala as dependências do projeto
+RUN npm install
+
+# Expondo a porta
+EXPOSE 8080
+
+# Comando para iniciar o servidor de desenvolvimento
+CMD ["npm", "run", "serve"]

@@ -1,0 +1,65 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+
+  backend-cron:
+    container_name: backend-cron
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: backend-cron
+    depends_on:
+      - backend
+    command: ["sh", "-c", "while true; do sh cron.sh; sleep 30; done"]
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: backend
+    ports:
+      - "8081:8081"
+    environment:
+      DATABASE_HOST: database      # importante: hostname do serviço do banco
+      DATABASE_USER: root
+      DATABASE_PASS: secret
+      DATABASE_DBNAME: db_prova
+      DATABASE_PORT: 5432      
+    depends_on:
+      - database
+    command: ["sh", "/start.sh"]
+
+  database:
+    container_name: database
+    build:
+      context: ./database
+      dockerfile: Dockerfile   
+    image: database 
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: db_prova
+      TZ: America/Sao_Paulo
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data  # <- volume para persistência
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s  # Espera inicial antes do primeiro teste (opcional, mas recomendado)
+
+volumes:
+  pgdata:

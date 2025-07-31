@@ -1,0 +1,18 @@
+# Ignore the .git directory and its contents
+.git
+.gitignore
+
+# Ignore node_modules directory
+node_modules
+
+# Ignore all files with a .log extension
+*.log
+
+# Ignore the 'temp' directory
+temp/
+
+# Ignore a specific file
+config.local.json
+
+# Exclude a specific file from an ignored directory (using negation)
+!node_modules/package.json

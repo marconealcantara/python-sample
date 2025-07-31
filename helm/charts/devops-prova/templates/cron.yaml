@@ -1,0 +1,20 @@
+{{- if .Values.cron.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-backend
+spec:
+  schedule: {{ .Values.cron.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cron-backend
+            image: "{{ .Values.cron.image.repository }}:{{ .Values.cron.image.tag }}"
+            imagePullPolicy: {{ .Values.cron.image.pullPolicy }}
+            {{- if .Values.command }}
+            command: {{ toJson .Values.command }}
+            {{- end }}
+          restartPolicy: {{ .Values.cron.restartPolicy }}
+{{- end }}
