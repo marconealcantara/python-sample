@@ -1,0 +1,20 @@
+docker images | findstr postgres
+
+docker rm -f $(docker ps -a -q)
+
+docker exec -it backend sh
+
+PGPASSWORD=secret psql -h database -U root -d db_prova
+
+kubectl exec -it database-devops-prova-56ffc7fff-96bcp  -- /bin/bash
+
+\dt product.product
+
+DATABASE_URL = f"postgresql://root:secret@database:5432/db_prova"
+
+kubectl config set-context --current --namespace=dev
+
+docker images | Select-String "marcone" | ForEach-Object { docker rmi -f "$(($_ -split '\s+')[0]):$(($_ -split '\s+')[1])" }
+
+
+
